@@ -8,6 +8,7 @@
 # http://www.nature.com/nature/journal/vaop/ncurrent/extref/nature12477-s1.pdf
 
 use strict; 
+use Statistics::R;
 use Getopt::Long;
 use Bio::SeqIO; 
 
@@ -40,6 +41,12 @@ unless (-r $reference){
     die "Can't read the file you specified as --reference argument: $reference";
 }
 
+# make a timestamp
+my $timestamp = POSIX::strftime("%H.%M.%S_%B_%d_%Y", localtime);
+
+# start an R process (do this now in case there is an installation problem, before parsing the ref sequence, which will take a while)
+my $R = Statistics::R->new();
+
 open (my $MUTATIONS, "$mutations") || die "Can't open --mutations file $mutations: $!";
 
 print STDERR "parsing reference sequence...\n";
@@ -49,8 +56,11 @@ my $refMap; # a hash with each reference sequence ID (key) and its sequence (val
 while ( my $ref = $refIO->next_seq ){
     $refMap->{$ref->primary_id} = $ref->seq;
 }
-undef;
-print STDERR "done.";
+print STDERR "done.\n";
+
+# data outfile
+my $dataOutfile = "mutation_signature." . $timestamp . ".data";
+open my $DATAOUT, ">$dataOutfile" || die "$!";
 
 # the following is a hash, organized thusly:
 # $signatureHistogramData->{mutation}->{3' residue}->{5' residue}
@@ -85,6 +95,13 @@ while ( my $line = <$MUTATIONS> ){
 	warn "before: reference is $thisRef, mutated is $mutated\n" if $debug;
 	$mutated =~ tr/ACGT/TGCA/;
 	$thisRef =~ tr/ACGT/TGCA/;
+
+	# $threePrime = tr/ACGT/TGCA/;
+	# $fivePrime = tr/ACGT/TGCA/;
+	
+	# my $tmp = $threePrime;
+	# $threePrime = $fivePrime;
+	# $fivePrime = $tmp;
 	warn "after: reference is $thisRef, mutated is $mutated\n" if $debug;
     }
 
@@ -92,22 +109,33 @@ while ( my $line = <$MUTATIONS> ){
     my $thisMutation = $thisRef . "->" . $mutated;
     $signatureHistogramData->{$thisMutation}->{$threePrime}->{$fivePrime}++;    
 }
-print STDERR "done.";
+print STDERR "done.\n";
 
 print STDERR "printing out histogram data...\n";
 foreach my $thisMutation ( sort keys %{$signatureHistogramData} ){
     foreach my $threePrime ( "A", "C", "G", "T" ){
 	foreach my $fivePrime ( "A", "C", "G", "T" ){
-	    print $thisMutation . "\t" . $threePrime . "\t" . $fivePrime . "\t";
+	    print $DATAOUT $thisMutation . "\t" . $threePrime . "\t" . $fivePrime . "\t";
 	    if ( exists $signatureHistogramData->{$thisMutation}->{$threePrime}->{$fivePrime} ){
-		print $signatureHistogramData->{$thisMutation}->{$threePrime}->{$fivePrime};
+		print $DATAOUT $signatureHistogramData->{$thisMutation}->{$threePrime}->{$fivePrime};
 	    } else {
-		print 0;
+		print $DATAOUT 0;
 	    }
-	    print "\n";
+	    print $DATAOUT "\n";
 	}
     }
 }
 
+my $pdf_outfile = "mutation_signature.${timestamp}.pdf";
 
-print STDERR "done.";
+# run some R code
+my $cmds = <<EOF;
+  pdf(\"$pdf_outfile\")
+  dat = read.table(\"$dataOutfile\")
+  barplot( dat\$V4 / sum(dat\$V4 ), ylim=c(0,0.2))
+  dev.off()
+EOF
+
+my $out = $R->run($cmds);
+
+print STDERR "done.\n";
