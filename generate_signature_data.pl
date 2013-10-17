@@ -130,7 +130,10 @@ my $pdf_outfile = "mutation_signature.${timestamp}.pdf";
 
 # run some R code
 # maybe change this to call ggplot, like this? 
-# ggplot(dat, aes(x=paste(V2, V3), fill=V1, y=V4/sum(dat$V4))) + geom_bar(stat="identity") + facet_grid(. ~ V1)
+# pdf(\"$pdf_outfile\")
+# require(ggplot2)
+# dat = read.table("mutation_signature.13.53.45_October_17_2013.data")
+# ggplot(dat, aes(x=paste(V2, V3), fill=V1, y=V4 * 100/sum(dat$V4))) + geom_bar(stat="identity") + facet_grid(. ~ V1) + ylim(0,20) + labs(title="Mutational signatures") + xlab("") + ylab("Percentage of mutations")
 my $cmds = <<EOF;
   pdf(\"$pdf_outfile\")
   dat = read.table(\"$dataOutfile\")
