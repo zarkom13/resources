@@ -129,6 +129,8 @@ foreach my $thisMutation ( sort keys %{$signatureHistogramData} ){
 my $pdf_outfile = "mutation_signature.${timestamp}.pdf";
 
 # run some R code
+# maybe change this to call ggplot, like this? 
+# ggplot(dat, aes(x=V2, fill=V1, y=V4/sum(dat$V4))) + geom_bar(stat="identity") + facet_grid(. ~ V1)
 my $cmds = <<EOF;
   pdf(\"$pdf_outfile\")
   dat = read.table(\"$dataOutfile\")
