@@ -116,6 +116,7 @@ foreach my $thisMutation ( sort keys %{$signatureHistogramData} ){
     foreach my $threePrime ( "A", "C", "G", "T" ){
 	foreach my $fivePrime ( "A", "C", "G", "T" ){
 	    print $DATAOUT $thisMutation . "\t" . $threePrime . "\t" . $fivePrime . "\t";
+	    # print $DATAOUT $thisMutation . "\t" . $threePrime . substr($thisMutation,0,1) . $fivePrime . "\t";
 	    if ( exists $signatureHistogramData->{$thisMutation}->{$threePrime}->{$fivePrime} ){
 		print $DATAOUT $signatureHistogramData->{$thisMutation}->{$threePrime}->{$fivePrime};
 	    } else {
@@ -129,16 +130,12 @@ foreach my $thisMutation ( sort keys %{$signatureHistogramData} ){
 my $pdf_outfile = "mutation_signature.${timestamp}.pdf";
 
 # run some R code
-# maybe change this to call ggplot, like this? 
-# pdf(\"$pdf_outfile\")
-# require(ggplot2)
-# dat = read.table("mutation_signature.13.53.45_October_17_2013.data")
-# ggplot(dat, aes(x=paste(V2, V3), fill=V1, y=V4 * 100/sum(dat$V4))) + geom_bar(stat="identity") + facet_grid(. ~ V1) + ylim(0,20) + labs(title="Mutational signatures") + xlab("") + ylab("Percentage of mutations")
 my $cmds = <<EOF;
-  pdf(\"$pdf_outfile\")
-  dat = read.table(\"$dataOutfile\")
-  barplot( dat\$V4 / sum(dat\$V4 ), ylim=c(0,0.2))
-  dev.off()
+ pdf(\"$pdf_outfile\")
+ require(ggplot2)
+ dat = read.table(\"$dataOutfile\")
+ ggplot(dat, aes(x=paste(V2, V3), fill=V1, y=V4 * 100/sum(dat\$V4))) + geom_bar(stat="identity") + facet_grid(. ~ V1) + ylim(0,20) + labs(title="Mutational signatures") + xlab("") + ylab("Percentage of mutations") + theme(axis.text.x = element_text(size = rel(0.35), angle = 90))
+ dev.off()
 EOF
 
 my $out = $R->run($cmds);
