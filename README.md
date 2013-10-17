@@ -47,7 +47,13 @@ The mutations file should be a tab delimited file such as that produced by Varsc
 
 chr1	13418	G	A	11	0	0%	G	8	4	33.33%	R	Somatic	1.0	0.055900621118012056	4	4	4	0	6	5	0	0
 
-But this script only cares about the first 4 columsn: 
+But this script only cares about the first 4 columns: 
 chromosome\tposition\treference nucleotide\tmutated nucleotide
+So it should be fairly easy to convert other formats into that format. 
 
-Run TEST.sh to make sure things are working. 
+The reference file should be in Fasta format, and should contain all of the scaffolds/chromosomes referred to in the mutations file.
+
+Run TEST.sh thusly (on *unix-y OSs) to make sure things are working: 
+
+cd mutational_signature_plots/
+./TEST.sh
