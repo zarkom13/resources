@@ -67,6 +67,7 @@ open my $DATAOUT, ">$dataOutfile" || die "$!";
 my $signatureHistogramData;
 print STDERR "parsing somatic mutations to make histogram data for signature plot...\n";
 while ( my $line = <$MUTATIONS> ){
+    chomp $line;
     next if $line =~ m/^\#/;
     my @fields = split /\t/, $line; 
     unless ( defined $fields[0] && defined $fields[1] ){
