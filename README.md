@@ -4,7 +4,8 @@ Mutational-signature-analysis
 Makes the data and plot similar to Fig 2 of this paper: 
 http://www.nature.com/nature/journal/vaop/ncurrent/full/nature12477.htm
 
-==== Installation
+Installation
+============
 
 Install prerequisites: 
 
@@ -42,16 +43,19 @@ install these Perl modules:
 You can probably just start R then type this: 
     install.packages("ggplot2")
 
-==== Running
+Running
+=======
 
-./generate_signature_data.pl --mutations [mutations file] --reference [reference fasta file]
+     ./generate_signature_data.pl --mutations [mutations file] --reference [reference fasta file]
 
 The mutations file should be a tab delimited file such as that produced by Varscan: 
 
     chr1	13418	G	A	11	0	0%	G	8	4	33.33%	R	Somatic	1.0	0.055900621118012056	4	4	4	0	6	5	0	0
 
 But this script only cares about the first 4 columns: 
+
     chromosome\tposition\treference nucleotide\tmutated nucleotide
+
 So it should be fairly easy to convert other formats into that format. 
 
 If you have a VCF file, this hack should work: 
