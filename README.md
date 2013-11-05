@@ -43,6 +43,14 @@ install these Perl modules:
 You can probably just start R then type this: 
     install.packages("ggplot2")
 
+Test
+====
+
+Run TEST.sh thusly (on *unix-y OSs) to make sure things are working: 
+
+    cd mutational_signature_plots/
+    ./TEST.sh
+
 Running
 =======
 
@@ -58,13 +66,12 @@ But this script only cares about the first 4 columns:
 
 So it should be fairly easy to convert other formats into that format. 
 
+Using VCF files as input
+========================
+
 If you have a VCF file, this hack should work: 
 
    grep -v \# [your VCF] | cut -f1,2,4,5 | grep -v "\," > positions # disregards positions with multiple alleles!!!
 
 The reference file should be in Fasta format, and should contain all of the scaffolds/chromosomes referred to in the mutations file.
 
-Run TEST.sh thusly (on *unix-y OSs) to make sure things are working: 
-
-    cd mutational_signature_plots/
-    ./TEST.sh
