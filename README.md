@@ -48,7 +48,7 @@ Test
 
 Run TEST.sh thusly (on *unix-y OSs) to make sure things are working: 
 
-    cd mutational_signature_plots/
+    cd analysis-of-mutational-signatures # or wherever you git clone'd
     ./TEST.sh
 
 Running
