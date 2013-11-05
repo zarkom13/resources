@@ -21,6 +21,7 @@ Install prerequisites:
    http://cran.r-project.org/
 
 Linux: 
+
        http://cran.r-project.org/bin/linux/
 
 Mac: 
