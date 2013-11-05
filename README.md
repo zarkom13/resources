@@ -16,28 +16,31 @@ Install prerequisites:
 	       ggplot2
 
 1) install R - follow instructions here:
-http://cran.r-project.org/
+   http://cran.r-project.org/
+
 Linux: 
-http://cran.r-project.org/bin/linux/
+       http://cran.r-project.org/bin/linux/
 
 Mac: 
-http://cran.r-project.org/bin/macosx/
+
+     http://cran.r-project.org/bin/macosx/
 
 Windows: 
-http://cran.r-project.org/bin/windows/
+
+	 http://cran.r-project.org/bin/windows/
 
 2) install Perl modules: 
 Using these instructions: 
-http://www.cpan.org/modules/INSTALL.html
+      http://www.cpan.org/modules/INSTALL.html
 
 install these Perl modules: 
-Statistics::R Getopt::Long Bio::SeqIO
+	Statistics::R Getopt::Long Bio::SeqIO
 
 3) install ggplot2, using these instructions: 
-http://math.usask.ca/~longhai/software/installrpkg.html
+   http://math.usask.ca/~longhai/software/installrpkg.html
 
 You can probably just start R then type this: 
-install.packages("ggplot2")
+    install.packages("ggplot2")
 
 ==== Running
 
@@ -45,15 +48,19 @@ install.packages("ggplot2")
 
 The mutations file should be a tab delimited file such as that produced by Varscan: 
 
-chr1	13418	G	A	11	0	0%	G	8	4	33.33%	R	Somatic	1.0	0.055900621118012056	4	4	4	0	6	5	0	0
+    chr1	13418	G	A	11	0	0%	G	8	4	33.33%	R	Somatic	1.0	0.055900621118012056	4	4	4	0	6	5	0	0
 
 But this script only cares about the first 4 columns: 
-chromosome\tposition\treference nucleotide\tmutated nucleotide
+    chromosome\tposition\treference nucleotide\tmutated nucleotide
 So it should be fairly easy to convert other formats into that format. 
+
+If you have a VCF file, this hack should work: 
+
+   grep -v \# [your VCF] | cut -f1,2,4,5 | grep -v "\," > positions # disregards positions with multiple alleles!!!
 
 The reference file should be in Fasta format, and should contain all of the scaffolds/chromosomes referred to in the mutations file.
 
 Run TEST.sh thusly (on *unix-y OSs) to make sure things are working: 
 
-cd mutational_signature_plots/
-./TEST.sh
+    cd mutational_signature_plots/
+    ./TEST.sh
