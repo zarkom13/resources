@@ -73,7 +73,9 @@ Using VCF files as input
 
 If you have a VCF file, this hack should work: 
 
-   grep -v \# [your VCF] | cut -f1,2,4,5 | grep -v "\," > positions # disregards positions with multiple alleles!!!
+   grep -v \# [your VCF] | cut -f1,2,4,5 | grep -v "\," > mutation_positions # this disregards positions with multiple alternate alleles!!!
+   
+  ./generate_signature_data.pl --mutations mutation_position --reference your_ref.fa
 
 The reference file should be in Fasta format, and should contain all of the scaffolds/chromosomes referred to in the mutations file.
 
